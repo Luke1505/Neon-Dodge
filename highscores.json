@@ -1,0 +1,38 @@
+[
+    {
+        "username": "Luke",
+        "score": 95
+    },
+    {
+        "username": "Test",
+        "score": 52
+    },
+    {
+        "username": "Luke",
+        "score": 32
+    },
+    {
+        "username": "Luke",
+        "score": 31
+    },
+    {
+        "username": "Test",
+        "score": 21
+    },
+    {
+        "username": "a",
+        "score": 19
+    },
+    {
+        "username": "Test",
+        "score": 16
+    },
+    {
+        "username": "Test",
+        "score": 14
+    },
+    {
+        "username": "a",
+        "score": 4
+    }
+]

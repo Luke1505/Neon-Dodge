@@ -1,0 +1,16 @@
+/bc_policy.pt
+/best_model
+/checkpoints
+/human_play_dataset.pkl
+/logs
+/neon_dodge_env.py
+/ppo_neon_dodge.zip
+/ppo_neon_dodge_policy.pth
+/ppo_neon_dodge_tensorboard
+/record_human_play.py
+/train_ai.py
+/train_behavior_cloning.py
+/venv
+/visualize.py
+/watch_ai.py
+/__pycache__
