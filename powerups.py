@@ -1,28 +1,25 @@
 import pygame
 import random
+import settings # Import settings
 
 # Define weights for each power-up type
 # Higher number means more common
 POWERUP_WEIGHTS = {
-    "shield": 5,  # Common
-    "slowmo": 4,  # Common
-    "shrink": 3,  # Uncommon
-    "turret": 2,  # Rare
-    "bomb": 3,  # Very Rare (powerful, so should be rare)
-    "extralife": 1,  # Very Rare (valuable)
+    "shield": 5,
+    "slowmo": 4,
+    "shrink": 3,
+    "turret": 2,
+    "bomb": 3,
+    "extralife": 1,
 }
 
-# This list is still useful for defining all *possible* types and their colors,
-# but the selection will happen from the weighted pool.
-# POWERUP_TYPES_AVAILABLE = list(POWERUP_WEIGHTS.keys()) # Or keep your existing POWERUP_TYPES list if it's comprehensive
-
 POWERUP_COLORS = {
-    "shield": (0, 200, 255),  # Light Blue
-    "slowmo": (255, 255, 0),  # Yellow
-    "bomb": (255, 80, 80),  # Red
-    "shrink": (255, 0, 255),  # Magenta
-    "extralife": (0, 255, 0),  # Green
-    "turret": (200, 200, 200),  # Light Grey / Silver
+    "shield": settings.NEON_BLUE, # Use settings colors
+    "slowmo": settings.NEON_YELLOW, # Use settings colors
+    "bomb": settings.NEON_RED, # Use settings colors
+    "shrink": settings.NEON_MAGENTA, # Use settings colors
+    "extralife": settings.NEON_GREEN, # Use settings colors
+    "turret": settings.NEON_GREY, # Use settings colors
 }
 
 # Create the selection pool based on weights
@@ -32,23 +29,20 @@ for type_name, weight in POWERUP_WEIGHTS.items():
 
 
 class PowerUp(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, game_settings=settings): # Accept game_settings
         super().__init__()
+        self.settings = game_settings # Store settings
 
         # Select type from the weighted pool
-        if (
-            not _POWERUP_SELECTION_POOL
-        ):  # Should not happen if POWERUP_WEIGHTS is defined
-            # Fallback to an arbitrary choice or raise an error
-            # For now, let's pick shield if pool is empty, though this indicates a setup issue.
+        if not _POWERUP_SELECTION_POOL:
             print("Warning: _POWERUP_SELECTION_POOL is empty! Defaulting to shield.")
             self.type = "shield"
         else:
             self.type = random.choice(_POWERUP_SELECTION_POOL)
 
-        self.size = 30
-        self.color = POWERUP_COLORS[self.type]  # Get color for the chosen type
-        self.speed = 4
+        self.size = self.settings.POWERUP_SIZE # Use settings for size
+        self.color = POWERUP_COLORS[self.type]
+        self.speed = self.settings.POWERUP_SPEED # Use settings for speed
 
         self.image = pygame.Surface([self.size, self.size], pygame.SRCALPHA)
         pygame.draw.ellipse(self.image, self.color, (0, 0, self.size, self.size))
@@ -65,15 +59,10 @@ class PowerUp(pygame.sprite.Sprite):
         self.image.blit(label_surface, label_rect)
 
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(
-            50, 750 - self.size
-        )  # Assuming screen width around 800
+        self.rect.x = random.randint(50, self.settings.WIDTH - self.size - 50) # Use settings.WIDTH
         self.rect.y = -self.size
 
     def update(self):
         self.rect.y += self.speed
-        if self.rect.top > pygame.display.get_surface().get_height():
+        if self.rect.top > self.settings.HEIGHT: # Use settings.HEIGHT
             self.kill()
-
-    # def draw(self, screen): # Not strictly needed if using group.draw()
-    #     screen.blit(self.image, self.rect)

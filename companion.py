@@ -1,56 +1,48 @@
 import pygame
-from bullet import Bullet  # Import the Bullet class
+from bullet import Bullet
+import settings # Import settings
 
 
 class Companion(pygame.sprite.Sprite):
-    COMPANION_OFFSET_X = -45  # Position relative to player (to the left)
-    COMPANION_OFFSET_Y = 0  # Slightly below player's top
-    FIRE_RATE_MS = 400  # Milliseconds between shots (faster rate)
+    COMPANION_OFFSET_X = -45
+    COMPANION_OFFSET_Y = 0
+    FIRE_RATE_MS = 400
 
-    # Duration will be handled by a timer in the Game class via powerup pickup
-
-    def __init__(
-        self, player_rect
-    ):  # Pass the whole player rect for better positioning
+    def __init__(self, player_rect, game_settings=settings): # Accept game_settings
         super().__init__()
+        self.settings = game_settings # Store settings
         self.width = 20
         self.height = 20
         self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)
-        self.color = (100, 150, 255)  # A distinct blue
+        self.color = self.settings.NEON_BLUE # Use settings color
         pygame.draw.rect(
             self.image, self.color, (0, 0, self.width, self.height), border_radius=5
         )
         self.rect = self.image.get_rect()
-        self.last_shot_time = pygame.time.get_ticks()  # Initialize last shot time
-        self.update_position(player_rect)  # Initial position
+        self.last_shot_time = pygame.time.get_ticks()
+        self.update_position(player_rect)
 
     def update_position(self, player_rect):
-        # Stays to the defined offset of the player
         self.rect.centerx = player_rect.centerx + self.COMPANION_OFFSET_X
         self.rect.centery = player_rect.centery + self.COMPANION_OFFSET_Y
 
-    def update(self, player_rect):  # Pass player_rect for continuous position updates
+    def update(self, player_rect):
         self.update_position(player_rect)
 
-        # Shooting logic
         now = pygame.time.get_ticks()
         bullets_fired = []
         if now - self.last_shot_time > self.FIRE_RATE_MS:
             self.last_shot_time = now
             bullets_fired = self.shoot()
-        return bullets_fired  # Return a list of bullets (can be empty)
+        return bullets_fired
 
     def shoot(self):
-        # Shoots straight up from companion's position
         bullet_start_x = self.rect.centerx
         bullet_start_y = self.rect.top
-        # Companion bullets are a different color and slightly faster
         new_bullet = Bullet(
-            bullet_start_x, bullet_start_y, speed_y=-15, color=(180, 180, 255), radius=5
+            bullet_start_x, bullet_start_y, speed_y=self.settings.COMPANION_BULLET_SPEED, color=self.settings.COMPANION_BULLET_COLOR, radius=5 # Use settings for speed and color
         )
         return [new_bullet]
 
-    def draw(
-        self, screen
-    ):  # Technically not needed if using sprite group's draw method for a single companion
+    def draw(self, screen):
         screen.blit(self.image, self.rect)

@@ -1,10 +1,11 @@
 import json
 import os
 import pygame
+import settings # Import settings
 
-WIDTH, HEIGHT = 600, 800
-WHITE = (255, 255, 255)
-HIGHSCORE_FILE = "highscores.json"
+WIDTH, HEIGHT = settings.WIDTH, settings.HEIGHT # Use settings for WIDTH, HEIGHT
+WHITE = settings.WHITE # Use settings for WHITE
+HIGHSCORE_FILE = settings.HIGHSCORE_FILE # Use settings for HIGHSCORE_FILE
 
 
 def save_high_scores(highscores):
@@ -31,7 +32,7 @@ def update_high_scores(username, score):
 
     highscores.sort(key=lambda x: x["score"], reverse=True)
 
-    save_high_scores(highscores[:10])  # MODIFIED HERE: Slice to keep only top 10
+    save_high_scores(highscores[:10])
 
 
 def get_high_score_value():
