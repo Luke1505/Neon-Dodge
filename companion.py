@@ -1,6 +1,6 @@
 import pygame
 from bullet import Bullet
-import settings  # Import settings
+# import settings  # Removed direct import, settings will be passed
 
 
 class Companion(pygame.sprite.Sprite):
@@ -8,9 +8,15 @@ class Companion(pygame.sprite.Sprite):
     COMPANION_OFFSET_Y = 0
     FIRE_RATE_MS = 400
 
-    def __init__(self, player_rect, game_settings=settings):  # Accept game_settings
+    def __init__(self, player_rect, game_settings=None):  # Accept game_settings
         super().__init__()
-        self.settings = game_settings  # Store settings
+        # Initialize settings with fallback if not provided
+        if game_settings is None:
+            import settings as default_settings # Fallback import
+            self.settings = default_settings
+        else:
+            self.settings = game_settings
+
         self.width = 20
         self.height = 20
         self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)
@@ -43,8 +49,8 @@ class Companion(pygame.sprite.Sprite):
             bullet_start_x,
             bullet_start_y,
             speed_y=self.settings.COMPANION_BULLET_SPEED,
-            color=self.settings.COMPANION_BULLET_COLOR,
             radius=5,  # Use settings for speed and color
+            game_settings=self.settings # Pass settings to the bullet
         )
         return [new_bullet]
 

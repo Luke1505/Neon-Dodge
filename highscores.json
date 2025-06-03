@@ -5,6 +5,10 @@
     },
     {
         "username": "Luke",
+        "score": 146
+    },
+    {
+        "username": "Luke",
         "score": 123
     },
     {
@@ -24,19 +28,15 @@
         "score": 88
     },
     {
+        "username": "Luke",
+        "score": 55
+    },
+    {
         "username": "Test",
         "score": 52
     },
     {
-        "username": "Luke",
-        "score": 32
-    },
-    {
-        "username": "Luke",
-        "score": 32
-    },
-    {
-        "username": "Luke",
-        "score": 31
+        "username": "Guest",
+        "score": 40
     }
 ]

@@ -1,23 +1,30 @@
 import json
 import os
 import pygame
-import settings  # Import settings
+# import settings  # Removed direct import, settings will be passed
 
-WIDTH, HEIGHT = settings.WIDTH, settings.HEIGHT  # Use settings for WIDTH, HEIGHT
-UI_TEXT_COLOR = settings.MENU_TEXT_COLOR  # Changed from WHITE to UI_TEXT_COLOR from settings
-HIGHSCORE_FILE = settings.HIGHSCORE_FILE  # Use settings for HIGHSCORE_FILE
+# WIDTH, HEIGHT, UI_TEXT_COLOR, HIGHSCORE_FILE will now be accessed via passed game_settings object
+# Remove module-level assignments from settings.py
 
-
-def save_high_scores(highscores):
-    with open(HIGHSCORE_FILE, "w") as f:
+def save_high_scores(highscores, game_settings=None): # Accept game_settings
+    # Initialize settings with fallback if not provided
+    if game_settings is None:
+        import settings as default_settings # Fallback import
+        game_settings = default_settings
+    with open(game_settings.HIGHSCORE_FILE, "w") as f: # Use game_settings
         json.dump(highscores, f, indent=4)
 
 
-def get_high_scores():
-    if not os.path.exists(HIGHSCORE_FILE):
+def get_high_scores(game_settings=None): # Accept game_settings
+    # Initialize settings with fallback if not provided
+    if game_settings is None:
+        import settings as default_settings # Fallback import
+        game_settings = default_settings
+
+    if not os.path.exists(game_settings.HIGHSCORE_FILE): # Use game_settings
         return []
     try:
-        with open(HIGHSCORE_FILE, "r") as f:
+        with open(game_settings.HIGHSCORE_FILE, "r") as f: # Use game_settings
             highscores = json.load(f)
             highscores = sorted(highscores, key=lambda x: x["score"], reverse=True)[:10]
             return highscores
@@ -25,22 +32,36 @@ def get_high_scores():
         return []
 
 
-def update_high_scores(username, score):
-    highscores = get_high_scores()
+def update_high_scores(username, score, game_settings=None): # Accept game_settings
+    # Initialize settings with fallback if not provided
+    if game_settings is None:
+        import settings as default_settings # Fallback import
+        game_settings = default_settings
+
+    highscores = get_high_scores(game_settings=game_settings) # Pass game_settings
 
     highscores.append({"username": username, "score": score})
 
     highscores.sort(key=lambda x: x["score"], reverse=True)
 
-    save_high_scores(highscores[:10])
+    save_high_scores(highscores[:10], game_settings=game_settings) # Pass game_settings
 
 
-def get_high_score_value():
-    scores = get_high_scores()
+def get_high_score_value(game_settings=None): # Accept game_settings
+    # Initialize settings with fallback if not provided
+    if game_settings is None:
+        import settings as default_settings # Fallback import
+        game_settings = default_settings
+    scores = get_high_scores(game_settings=game_settings) # Pass game_settings
     return scores[0]["score"] if scores else 0
 
 
-def get_username(screen):
+def get_username(screen, game_settings=None): # Accept game_settings
+    # Initialize settings with fallback if not provided
+    if game_settings is None:
+        import settings as default_settings # Fallback import
+        game_settings = default_settings
+
     pygame.font.init()
     font = pygame.font.SysFont("consolas", 32)
     username = ""
@@ -48,18 +69,18 @@ def get_username(screen):
     clock = pygame.time.Clock()
 
     while input_active:
-        screen.fill(settings.BACKGROUND_COLOR) # Changed to use BACKGROUND_COLOR from settings
+        screen.fill(game_settings.BACKGROUND_COLOR) # Changed to use BACKGROUND_COLOR from game_settings
 
         hint_text = "Enter Username (optional):"
-        display_text = font.render(f"{hint_text} {username}", True, UI_TEXT_COLOR) # Changed to UI_TEXT_COLOR
+        display_text = font.render(f"{hint_text} {username}", True, game_settings.MENU_TEXT_COLOR) # Changed to game_settings.MENU_TEXT_COLOR
         screen.blit(
-            display_text, (WIDTH // 2 - display_text.get_width() // 2, HEIGHT // 2 - 30)
+            display_text, (game_settings.WIDTH // 2 - display_text.get_width() // 2, game_settings.HEIGHT // 2 - 30) # Use game_settings
         )
 
-        instruction_text = font.render("Press ENTER to continue", True, UI_TEXT_COLOR) # Changed to UI_TEXT_COLOR
+        instruction_text = font.render("Press ENTER to continue", True, game_settings.MENU_TEXT_COLOR) # Changed to game_settings.MENU_TEXT_COLOR
         screen.blit(
             instruction_text,
-            (WIDTH // 2 - instruction_text.get_width() // 2, HEIGHT // 2 + 30),
+            (game_settings.WIDTH // 2 - instruction_text.get_width() // 2, game_settings.HEIGHT // 2 + 30), # Use game_settings
         )
 
         pygame.display.flip()

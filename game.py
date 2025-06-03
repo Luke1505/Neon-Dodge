@@ -10,12 +10,13 @@ from utils import (
     update_high_scores,
     get_high_scores,
     get_high_score_value,
-)  # WIDTH, HEIGHT removed
+)
 from bullet import Bullet
 from companion import Companion
 from particle import Particle
 from dataclasses import dataclass, field
-import settings  # Import settings
+import importlib # Add this import for reloading modules
+import sys       # Add this import for checking loaded modules
 
 
 # --- Dataclasses ---
@@ -52,36 +53,41 @@ def draw_text_centered(screen, text, font, color, surface_rect):
     screen.blit(text_surf, text_rect)
 
 
-def show_main_menu(screen, username=""):  # username is passed in
+def show_main_menu(screen, username="", game_settings=None):  # username is passed in, accept game_settings
+    # Initialize settings with fallback if not provided
+    if game_settings is None:
+        import settings as default_settings # Fallback import
+        game_settings = default_settings
+
     menu_font = pygame.font.SysFont("consolas", 30)
     title_font = pygame.font.SysFont("consolas", 48)
     small_font = pygame.font.SysFont("consolas", 22)
     input_font = pygame.font.SysFont("consolas", 28)
     clock = pygame.time.Clock()
-    input_box_rect = pygame.Rect(settings.WIDTH // 2 - 150, 220, 300, 40)
+    input_box_rect = pygame.Rect(game_settings.WIDTH // 2 - 150, 220, 300, 40)
     input_box_active = False
     current_username = username  # Initialize with the passed-in username
     cursor_position = len(current_username)
     running = True
     button_y_start = input_box_rect.bottom + 40
-    button_spacing = settings.BUTTON_HEIGHT + 20
+    button_spacing = game_settings.BUTTON_HEIGHT + 20
     start_button_rect = pygame.Rect(
-        settings.WIDTH // 2 - settings.BUTTON_WIDTH // 2,
+        game_settings.WIDTH // 2 - game_settings.BUTTON_WIDTH // 2,
         button_y_start,
-        settings.BUTTON_WIDTH,
-        settings.BUTTON_HEIGHT,
+        game_settings.BUTTON_WIDTH,
+        game_settings.BUTTON_HEIGHT,
     )
     instructions_button_rect = pygame.Rect(
-        settings.WIDTH // 2 - settings.BUTTON_WIDTH // 2,
+        game_settings.WIDTH // 2 - game_settings.BUTTON_WIDTH // 2,
         button_y_start + button_spacing,
-        settings.BUTTON_WIDTH,
-        settings.BUTTON_HEIGHT,
+        game_settings.BUTTON_WIDTH,
+        game_settings.BUTTON_HEIGHT,
     )
     quit_button_rect = pygame.Rect(
-        settings.WIDTH // 2 - settings.BUTTON_WIDTH // 2,
+        game_settings.WIDTH // 2 - game_settings.BUTTON_WIDTH // 2,
         button_y_start + button_spacing * 2,
-        settings.BUTTON_WIDTH,
-        settings.BUTTON_HEIGHT,
+        game_settings.BUTTON_WIDTH,
+        game_settings.BUTTON_HEIGHT,
     )
 
     cursor_blink_interval = 500  # milliseconds
@@ -90,25 +96,25 @@ def show_main_menu(screen, username=""):  # username is passed in
 
     # Initialize stars for the background
     stars = []
-    for _ in range(settings.NUM_STARS):
-        x = random.randint(0, settings.WIDTH)
-        y = random.randint(0, settings.HEIGHT)
-        speed = random.randint(settings.STAR_SPEED_MIN, settings.STAR_SPEED_MAX)
-        color = random.choice(settings.STAR_COLORS)
-        size = random.randint(settings.STAR_SIZE_MIN, settings.STAR_SIZE_MAX)
+    for _ in range(game_settings.NUM_STARS):
+        x = random.randint(0, game_settings.WIDTH)
+        y = random.randint(0, game_settings.HEIGHT)
+        speed = random.randint(game_settings.STAR_SPEED_MIN, game_settings.STAR_SPEED_MAX)
+        color = random.choice(game_settings.STAR_COLORS)
+        size = random.randint(game_settings.STAR_SIZE_MIN, game_settings.STAR_SIZE_MAX)
         stars.append([x, y, speed, color, size])
 
     def _update_stars():
         for i in range(len(stars)):
             star = stars[i]
             star[1] += star[2]  # Stars move down
-            if star[1] > settings.HEIGHT:
+            if star[1] > game_settings.HEIGHT:
                 stars[i] = [
-                    random.randint(0, settings.WIDTH),
+                    random.randint(0, game_settings.WIDTH),
                     random.randint(-20, -5),  # Respawn above screen
-                    random.randint(settings.STAR_SPEED_MIN, settings.STAR_SPEED_MAX),
-                    random.choice(settings.STAR_COLORS),
-                    random.randint(settings.STAR_SIZE_MIN, settings.STAR_SIZE_MAX),
+                    random.randint(game_settings.STAR_SPEED_MIN, game_settings.STAR_SPEED_MAX),
+                    random.choice(game_settings.STAR_COLORS),
+                    random.randint(game_settings.STAR_SIZE_MIN, game_settings.STAR_SIZE_MAX),
                 ]
 
     def _draw_stars():
@@ -126,7 +132,7 @@ def show_main_menu(screen, username=""):  # username is passed in
             last_cursor_toggle = current_time
 
         mouse_pos = pygame.mouse.get_pos()
-        screen.fill(settings.BACKGROUND_COLOR)  # Use the game's background color
+        screen.fill(game_settings.BACKGROUND_COLOR)  # Use the game's background color
         _update_stars()
         _draw_stars()
 
@@ -134,26 +140,26 @@ def show_main_menu(screen, username=""):  # username is passed in
             screen,
             "NEON DODGE",
             title_font,
-            settings.MENU_TITLE_COLOR,
-            pygame.Rect(0, 100, settings.WIDTH, title_font.get_height()),
+            game_settings.MENU_TITLE_COLOR,
+            pygame.Rect(0, 100, game_settings.WIDTH, title_font.get_height()),
         )
         username_label_surf = small_font.render(
-            "Enter Username:", True, settings.MENU_TEXT_COLOR
+            "Enter Username:", True, game_settings.MENU_TEXT_COLOR
         )
         screen.blit(
             username_label_surf,
             (input_box_rect.x, input_box_rect.y - username_label_surf.get_height() - 5),
         )
         current_input_box_color = (
-            settings.INPUT_BOX_COLOR_ACTIVE
+            game_settings.INPUT_BOX_COLOR_ACTIVE
             if input_box_active
-            else settings.INPUT_BOX_COLOR_INACTIVE
+            else game_settings.INPUT_BOX_COLOR_INACTIVE
         )
         pygame.draw.rect(
             screen, current_input_box_color, input_box_rect, 2, border_radius=5
         )
         username_text_surf = input_font.render(
-            current_username, True, settings.MENU_TEXT_COLOR
+            current_username, True, game_settings.MENU_TEXT_COLOR
         )
         screen.blit(
             username_text_surf,
@@ -167,7 +173,7 @@ def show_main_menu(screen, username=""):  # username is passed in
         # Draw the cursor if active and visible
         if input_box_active and cursor_visible:
             text_before_cursor = input_font.render(
-                current_username[:cursor_position], True, settings.MENU_TEXT_COLOR
+                current_username[:cursor_position], True, game_settings.MENU_TEXT_COLOR
             )
             cursor_x = input_box_rect.x + 10 + text_before_cursor.get_width()
             cursor_y = (
@@ -177,29 +183,29 @@ def show_main_menu(screen, username=""):  # username is passed in
             cursor_height = input_font.get_height()
             pygame.draw.line(
                 screen,
-                settings.MENU_TEXT_COLOR,
+                game_settings.MENU_TEXT_COLOR,
                 (cursor_x, cursor_y),
                 (cursor_x, cursor_y + cursor_height),
                 2,
             )
 
         start_color = (
-            settings.BUTTON_COLOR_HOVER
+            game_settings.BUTTON_COLOR_HOVER
             if start_button_rect.collidepoint(mouse_pos)
-            else settings.BUTTON_COLOR_NORMAL
+            else game_settings.BUTTON_COLOR_NORMAL
         )
         pygame.draw.rect(screen, start_color, start_button_rect, border_radius=10)
         draw_text_centered(
             screen,
             "START GAME",
             menu_font,
-            settings.BUTTON_TEXT_COLOR,
+            game_settings.BUTTON_TEXT_COLOR,
             start_button_rect,
         )
         instr_color = (
-            settings.BUTTON_COLOR_HOVER
+            game_settings.BUTTON_COLOR_HOVER
             if instructions_button_rect.collidepoint(mouse_pos)
-            else settings.BUTTON_COLOR_NORMAL
+            else game_settings.BUTTON_COLOR_NORMAL
         )
         pygame.draw.rect(
             screen, instr_color, instructions_button_rect, border_radius=10
@@ -208,22 +214,22 @@ def show_main_menu(screen, username=""):  # username is passed in
             screen,
             "INSTRUCTIONS",
             menu_font,
-            settings.BUTTON_TEXT_COLOR,
+            game_settings.BUTTON_TEXT_COLOR,
             instructions_button_rect,
         )
         quit_color = (
-            settings.BUTTON_COLOR_HOVER
+            game_settings.BUTTON_COLOR_HOVER
             if quit_button_rect.collidepoint(mouse_pos)
-            else settings.BUTTON_COLOR_NORMAL
+            else game_settings.BUTTON_COLOR_NORMAL
         )
         pygame.draw.rect(screen, quit_color, quit_button_rect, border_radius=10)
         draw_text_centered(
-            screen, "QUIT", menu_font, settings.BUTTON_TEXT_COLOR, quit_button_rect
+            screen, "QUIT", menu_font, game_settings.BUTTON_TEXT_COLOR, quit_button_rect
         )
         hs_y_start = quit_button_rect.bottom + 20
-        if hs_y_start + 150 > settings.HEIGHT:
-            hs_y_start = settings.HEIGHT - 150
-        draw_high_scores(screen, small_font, y_start=hs_y_start)
+        if hs_y_start + 150 > game_settings.HEIGHT:
+            hs_y_start = game_settings.HEIGHT - 150
+        draw_high_scores(screen, small_font, y_start=hs_y_start, game_settings=game_settings) # Pass game_settings
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -321,23 +327,28 @@ def show_main_menu(screen, username=""):  # username is passed in
     return ACTION_QUIT_GAME, current_username  # Fallback return
 
 
-def draw_high_scores(screen, font, y_start):
-    highscores = get_high_scores()
+def draw_high_scores(screen, font, y_start, game_settings=None): # Accept game_settings
+    # Initialize settings with fallback if not provided
+    if game_settings is None:
+        import settings as default_settings # Fallback import
+        game_settings = default_settings
+
+    highscores = get_high_scores(game_settings=game_settings) # Pass game_settings
     highscores.sort(key=lambda x: x["score"], reverse=True)
     y_pos = y_start
     title_text_surf = font.render("Top 10 Scores", True, (255, 255, 255))
     screen.blit(
-        title_text_surf, (settings.WIDTH // 2 - title_text_surf.get_width() // 2, y_pos)
+        title_text_surf, (game_settings.WIDTH // 2 - title_text_surf.get_width() // 2, y_pos)
     )
-    y_pos += 28  # Use settings.WIDTH
+    y_pos += 28  # Use game_settings.WIDTH
     for i, entry in enumerate(highscores[:10]):
         hs_text_surf = font.render(
             f"{i+1}. {entry['username']}: {entry['score']}", True, (200, 200, 200)
         )
         screen.blit(
-            hs_text_surf, (settings.WIDTH // 2 - hs_text_surf.get_width() // 2, y_pos)
+            hs_text_surf, (game_settings.WIDTH // 2 - hs_text_surf.get_width() // 2, y_pos)
         )
-        y_pos += 24  # Use settings.WIDTH
+        y_pos += 24  # Use game_settings.WIDTH
 
 
 class Game:
@@ -347,19 +358,25 @@ class Game:
     STATE_INSTRUCTIONS = "instructions"
     STATE_EXIT_TO_MENU = "exit_to_menu"
     STATE_CONFIRM_QUIT = "confirm_quit"
-
+    STATE_CONFIRM_RESTART = "confirm_restart"
+    
     def __init__(
         self,
         screen,
         username,
         ai_mode=False,
         start_state=STATE_PLAYING,
-        game_settings=settings,
-    ):  # Accept game_settings
+        game_settings=None, # Accept game_settings
+    ):
         self.ai_mode = ai_mode
         self.screen = screen
         self.username = username.strip() or "Guest"
-        self.settings = game_settings  # Store settings
+        # Initialize settings with fallback if not provided
+        if game_settings is None:
+            import settings as default_settings # Fallback import
+            self.settings = default_settings
+        else:
+            self.settings = game_settings  # Store settings
 
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("consolas", 28)
@@ -377,7 +394,7 @@ class Game:
         self.pause_restart_button = None
         self.pause_main_menu_button = None
         self.instructions_back_button = None
-
+        
         self.confirm_quit_yes_button = None
         self.confirm_quit_no_button = None
         self.previous_state_on_quit_request = None
@@ -399,8 +416,10 @@ class Game:
         self,
         position,
         base_color,
-        num_particles=settings.PARTICLES_PER_OBSTACLE_EXPLOSION,
-    ):  # Use settings
+        num_particles=None, # Changed default to None so it can use self.settings
+    ):
+        if num_particles is None:
+            num_particles = self.settings.PARTICLES_PER_OBSTACLE_EXPLOSION # Use settings
         for _ in range(num_particles):
             self.particles.add(Particle(position[0], position[1], base_color))
 
@@ -409,7 +428,7 @@ class Game:
         self.obstacles = pygame.sprite.Group()
         self.powerups = pygame.sprite.Group()
         self.score = 0
-        self.high_score = get_high_score_value()
+        self.high_score = get_high_score_value(game_settings=self.settings) # Pass game_settings
         self.obstacle_speed = self.settings.OBSTACLE_BASE_SPEED
         self.speed_multiplier = 1.0
         self.lives = self.settings.INITIAL_LIVES  # Use settings
@@ -449,8 +468,8 @@ class Game:
             )
 
     def update_score(self):
-        update_high_scores(self.username, self.score)
-        self.high_score = get_high_score_value()
+        update_high_scores(self.username, self.score, game_settings=self.settings) # Pass game_settings
+        self.high_score = get_high_score_value(game_settings=self.settings) # Pass game_settings
 
     @staticmethod
     def ai_decide_move(player, obstacles_group):
@@ -497,8 +516,8 @@ class Game:
             mouse_pos = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+                    # Return ACTION_QUIT_GAME to main loop to exit application
+                    return ACTION_QUIT_GAME
                 if event.type == pygame.KEYDOWN:
                     if (
                         event.key == pygame.K_ESCAPE
@@ -514,6 +533,7 @@ class Game:
             self.render_instructions_screen(mouse_pos, back_button_rect)
             pygame.display.flip()
             self.clock.tick(30)
+        return ACTION_BACK_TO_MAIN_MENU # Indicate return to main menu
 
     def game_loop(self):
         while self.current_state not in [self.STATE_EXIT_TO_MENU, ACTION_QUIT_GAME]:
@@ -570,6 +590,10 @@ class Game:
                         self.instructions_back_button
                         and self.instructions_back_button.collidepoint(mouse_pos)
                     ):
+                        # If coming from pause, go back to pause. If from main menu, go back to main menu.
+                        # For simplicity here, always go back to paused state if instructions is accessed during a game
+                        # from pause menu. If accessed from main menu, run_instructions_loop directly returns to main menu.
+                        # This specific path implies from pause, so return to pause.
                         self.current_state = self.STATE_PAUSED
                 elif self.current_state == self.STATE_CONFIRM_QUIT:
                     if (
@@ -580,6 +604,21 @@ class Game:
                             self.current_state = ACTION_QUIT_GAME
                         else:
                             self.current_state = self.STATE_EXIT_TO_MENU
+                    elif (
+                        self.confirm_quit_no_button
+                        and self.confirm_quit_no_button.collidepoint(mouse_pos)
+                    ):
+                        self.current_state = self.previous_state_on_quit_request
+                elif self.current_state == self.STATE_CONFIRM_RESTART:
+                    if (
+                        self.confirm_quit_yes_button
+                        and self.confirm_quit_yes_button.collidepoint(mouse_pos)
+                    ):
+                        # Reload settings before resetting game state
+                        if 'settings' in sys.modules:
+                            self.settings = importlib.reload(sys.modules['settings']) # Reload settings
+                        self.reset_game_state()
+                        self.current_state = self.STATE_PLAYING
                     elif (
                         self.confirm_quit_no_button
                         and self.confirm_quit_no_button.collidepoint(mouse_pos)
@@ -605,13 +644,17 @@ class Game:
                         self.current_state = self.STATE_CONFIRM_QUIT
                     elif e.key == pygame.K_r:
                         self.previous_state_on_quit_request = self.STATE_PAUSED
-                        self.quit_context_message = "Restart (to Main Menu)?"
-                        self.current_state = self.STATE_CONFIRM_QUIT
+                        self.quit_context_message = "Restart ?"
+                        self.current_state = self.STATE_CONFIRM_RESTART
                 elif self.current_state == self.STATE_GAME_OVER:
                     if e.key == pygame.K_r:
                         self.previous_state_on_quit_request = self.STATE_GAME_OVER
-                        self.quit_context_message = "Restart (to Main Menu)?"
-                        self.current_state = self.STATE_CONFIRM_QUIT
+                        self.quit_context_message = "Restart?"
+                        # Reload settings before resetting game state
+                        if 'settings' in sys.modules:
+                            self.settings = importlib.reload(sys.modules['settings']) # Reload settings
+                        self.reset_game_state()
+                        self.current_state = self.STATE_PLAYING
                     elif e.key == pygame.K_ESCAPE:
                         self.previous_state_on_quit_request = self.STATE_GAME_OVER
                         self.quit_context_message = "Quit to Main Menu?"
@@ -629,6 +672,15 @@ class Game:
                             self.current_state = ACTION_QUIT_GAME
                         else:
                             self.current_state = self.STATE_EXIT_TO_MENU
+                    elif e.key == pygame.K_n:
+                        self.current_state = self.previous_state_on_quit_request
+                elif self.current_state == self.STATE_CONFIRM_RESTART:
+                    if e.key == pygame.K_y:
+                        # Reload settings before resetting game state
+                        if 'settings' in sys.modules:
+                            self.settings = importlib.reload(sys.modules['settings'])
+                        self.reset_game_state()
+                        self.current_state = self.STATE_PLAYING
                     elif e.key == pygame.K_n:
                         self.current_state = self.previous_state_on_quit_request
 
@@ -922,8 +974,11 @@ class Game:
             3,
             border_radius=15,
         )  # Use settings
+        title_text = "Confirm Exit"
+        if self.current_state == self.STATE_CONFIRM_RESTART:
+            title_text = "Confirm Restart"
         title_surf = self.large_font.render(
-            "Confirm Exit", True, self.settings.MENU_TEXT_COLOR
+            title_text, True, self.settings.MENU_TEXT_COLOR
         )  # Use settings
         self.screen.blit(
             title_surf,
@@ -1010,6 +1065,8 @@ class Game:
             self.render_instructions_screen(mouse_pos)
         elif self.current_state == self.STATE_CONFIRM_QUIT:
             self.render_confirm_quit_screen(mouse_pos)
+        elif self.current_state == self.STATE_CONFIRM_RESTART:
+            self.render_confirm_quit_screen(mouse_pos) # Use same render for confirm dialog
 
     def render_ui(self, now):
         self.screen.blit(
@@ -1315,4 +1372,4 @@ class Game:
             )
             button_y += button_spacing_pause  # Use settings
         if message == "GAME OVER" or message == "PAUSED":
-            draw_high_scores(self.screen, self.small_font, y_start=button_y + 10)
+            draw_high_scores(self.screen, self.small_font, y_start=button_y + 10, game_settings=self.settings) # Pass game_settings

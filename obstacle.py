@@ -1,6 +1,6 @@
 import random
 import pygame
-import settings  # Import settings
+# import settings  # Removed direct import, settings will be passed
 
 
 class Obstacle(pygame.sprite.Sprite):
@@ -10,7 +10,7 @@ class Obstacle(pygame.sprite.Sprite):
     BASE_HEIGHT = (
         20  # Kept as class attributes for local reference, can be moved to settings
     )
-    BASE_COLOR = settings.NEON_RED  # Use settings color
+    # BASE_COLOR will now be an instance attribute based on settings
 
     def __init__(
         self,
@@ -19,10 +19,15 @@ class Obstacle(pygame.sprite.Sprite):
         can_split=False,
         num_splits=2,
         position=None,
-        game_settings=settings,  # Accept game_settings
+        game_settings=None,  # Accept game_settings
     ):
         super().__init__()
-        self.settings = game_settings  # Store settings
+        # Initialize settings with fallback if not provided
+        if game_settings is None:
+            import settings as default_settings # Fallback import
+            self.settings = default_settings
+        else:
+            self.settings = game_settings  # Store settings
 
         self.speed = speed
         self.generation = generation
@@ -32,21 +37,23 @@ class Obstacle(pygame.sprite.Sprite):
         if self.generation == 1:
             self.width = self.BASE_WIDTH
             self.height = self.BASE_HEIGHT
-            self.color = self.BASE_COLOR
+            self.color = self.settings.NEON_RED # Use settings color
             self.effective_speed = self.speed
         elif self.generation == 0:
             self.width = int(self.BASE_WIDTH * 0.55)
             self.height = int(self.BASE_HEIGHT * 0.7)
+            # Derive color from the base settings color, assuming NEON_RED is the base
+            base_red = self.settings.NEON_RED
             self.color = (
-                max(0, self.BASE_COLOR[0] - 70),
-                self.BASE_COLOR[1],
-                self.BASE_COLOR[2],
+                max(0, base_red[0] - 70),
+                base_red[1],
+                base_red[2],
             )
             self.effective_speed = self.speed * 1.2
         else:  # Fallback, though generation 1 and 0 are the primary types
             self.width = self.BASE_WIDTH
             self.height = self.BASE_HEIGHT
-            self.color = self.BASE_COLOR
+            self.color = self.settings.NEON_RED # Use settings color
             self.effective_speed = self.speed
 
         self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)

@@ -1,6 +1,6 @@
 import pygame
 import random
-import settings  # Import settings
+# import settings  # Removed direct import, settings will be passed
 
 # Define weights for each power-up type
 # Higher number means more common
@@ -20,9 +20,14 @@ for type_name, weight in POWERUP_WEIGHTS.items():
 
 
 class PowerUp(pygame.sprite.Sprite):
-    def __init__(self, game_settings=settings):  # Accept game_settings
+    def __init__(self, game_settings=None):  # Accept game_settings
         super().__init__()
-        self.settings = game_settings  # Store settings
+        # Initialize settings with fallback if not provided
+        if game_settings is None:
+            import settings as default_settings # Fallback import
+            self.settings = default_settings
+        else:
+            self.settings = game_settings  # Store settings
 
         # Select type from the weighted pool
         if not _POWERUP_SELECTION_POOL:
@@ -32,7 +37,7 @@ class PowerUp(pygame.sprite.Sprite):
             self.type = random.choice(_POWERUP_SELECTION_POOL)
 
         self.size = self.settings.POWERUP_SIZE  # Use settings for size
-        self.color = settings.POWERUP_COLORS[self.type]
+        self.color = self.settings.POWERUP_COLORS[self.type] # Use self.settings
         self.speed = self.settings.POWERUP_SPEED  # Use settings for speed
 
         self.image = pygame.Surface([self.size, self.size], pygame.SRCALPHA)

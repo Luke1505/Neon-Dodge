@@ -1,18 +1,24 @@
 import pygame
-import settings  # Import settings
+# import settings  # Removed direct import, settings will be passed
 
 
 # Inherit from pygame.sprite.Sprite
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game_settings=settings):  # Accept game_settings
+    def __init__(self, game_settings=None):  # Accept game_settings
         super().__init__()
-        self.settings = game_settings  # Store settings
+        # Initialize settings with fallback if not provided
+        if game_settings is None:
+            import settings as default_settings # Fallback import
+            self.settings = default_settings
+        else:
+            self.settings = game_settings  # Store settings
+
         self.original_width = 60
         self.original_height = 20
         self.width = self.original_width
         self.height = self.original_height
 
-        self.color = settings.PLAYER_COLOR  # Use settings color
+        self.color = self.settings.PLAYER_COLOR  # Use settings color
 
         self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)
         self.rect = self.image.get_rect()
