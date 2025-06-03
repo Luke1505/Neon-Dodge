@@ -13,7 +13,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-    # Shield (1 hit protection)
-    # Slo-Mo (slow down obstacles for a short time with button press)
-    # Bomb (destroy all obstacles on screen with button press)

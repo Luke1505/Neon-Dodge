@@ -1,5 +1,9 @@
 [
     {
+        "username": "Guest",
+        "score": 105
+    },
+    {
         "username": "Luke",
         "score": 95
     },
@@ -10,6 +14,10 @@
     {
         "username": "Luke",
         "score": 32
+    },
+    {
+        "username": "Luke",
+        "score": 31
     },
     {
         "username": "Luke",
@@ -30,9 +38,5 @@
     {
         "username": "Test",
         "score": 14
-    },
-    {
-        "username": "a",
-        "score": 4
     }
 ]

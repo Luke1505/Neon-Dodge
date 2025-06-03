@@ -1,47 +1,76 @@
 import pygame
 from utils import WIDTH, HEIGHT 
 
-class Player:
+# Inherit from pygame.sprite.Sprite
+class Player(pygame.sprite.Sprite):
     def __init__(self):
-        self.width = 60
-        self.height = 20
-        self.x = 300  # Start at the center
-        self.y = 740  # Near the bottom
-        self.speed = 8
+        super().__init__() # Call the parent Sprite constructor
+        self.original_width = 60
+        self.original_height = 20
+        self.width = self.original_width
+        self.height = self.original_height
+        
         self.color = (0, 255, 180)
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        
+        # Create self.image and self.rect
+        self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)
+        self.image.fill(self.color) # Simple fill for now, can be more complex
+        # If you want rounded corners on the image itself:
+        # self.image.fill((0,0,0,0)) # Transparent background
+        # pygame.draw.rect(self.image, self.color, (0,0,self.width,self.height), border_radius=6)
+
+        self.rect = self.image.get_rect()
+        
+        self.rect.x = 300  # Start at the center
+        self.rect.y = 740  # Near the bottom
+        self.speed = 8
+
 
     def move(self, keys):
+        dx = 0
+        dy = 0
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.x -= self.speed
+            dx = -self.speed
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.x += self.speed
+            dx = self.speed
         if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.y -= self.speed
+            dy = -self.speed
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.y += self.speed
-        # limit x to the left and right edges of the screen and 5 pixels from the edges
-        self.x = max(2.5, min(WIDTH - self.width - 2.5, self.x))
-        # limt y to the bottom half of the screen and 20 pixels from the bottom
-        self.y = max(HEIGHT // 2, min(HEIGHT - self.height - 5, self.y))
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+            dy = self.speed
+        
+        self.rect.x += dx
+        self.rect.y += dy
+        
+        # Update self.x and self.y if other parts of your code still use them, though rect.x/y is preferred
+        self.x = self.rect.x 
+        self.y = self.rect.y
 
-    def move_action(self, dx, dy):
-        self.x += dx * self.speed
-        self.y += dy * self.speed
-
-        # Clamp to screen bounds
-        self.x = max(0, min(WIDTH - self.width, self.x))
-        self.y = max(0, min(HEIGHT - self.height, self.y))
-
-        self.rect.topleft = (self.x, self.y)
-
-        # Clamp to allowed region
-        self.x = max(2.5, min(WIDTH - self.width - 2.5, self.x))
-        self.y = max(HEIGHT // 2, min(HEIGHT - self.height - 5, self.y))
+        # Boundary checks using self.rect
+        self.rect.left = max(2.5, self.rect.left)
+        self.rect.right = min(WIDTH - 2.5, self.rect.right)
+        self.rect.top = max(HEIGHT // 2, self.rect.top)
+        self.rect.bottom = min(HEIGHT - 5, self.rect.bottom)
     
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height), border_radius=6)
+    def update_visuals(self):
+        """ Recreates self.image if size or color changes. Call after modifying width/height/color. """
+        # This is important if player size changes (e.g., shrink powerup)
+        old_center = self.rect.center
+        self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)
+        # self.image.fill(self.color) # Or draw rounded rect
+        pygame.draw.rect(self.image, self.color, (0,0,self.width,self.height), border_radius=6)
+        self.rect = self.image.get_rect(center=old_center)
 
-    def get_rect(self):
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+
+    # The draw method is no longer strictly necessary if using group.draw(),
+    # but it's good to have a consistent way to draw the player.
+    # Pygame's group.draw() will use self.image and self.rect.
+    # However, your Game.render_game() currently calls player.draw() explicitly.
+    def draw(self, screen):
+        # The player's self.image should be updated by update_visuals() if size changes
+        pygame.draw.rect(screen, self.color, self.rect, border_radius=6)
+        # Or, if self.image is always up-to-date:
+        # screen.blit(self.image, self.rect)
+
+    # get_rect() is no longer needed as self.rect is the primary rectangle.
+    # def get_rect(self):
+    #     return pygame.Rect(self.x, self.y, self.width, self.height)

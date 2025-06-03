@@ -10,14 +10,12 @@ def save_high_scores(highscores):
     with open(HIGHSCORE_FILE, "w") as f:
         json.dump(highscores, f, indent=4)
 
-# get top 10 high scores
 def get_high_scores():
     if not os.path.exists(HIGHSCORE_FILE):
         return []
     try:
         with open(HIGHSCORE_FILE, "r") as f:
             highscores = json.load(f)
-            # load only the top 10 scores
             highscores = sorted(highscores, key=lambda x: x["score"], reverse=True)[:10]
             return highscores
     except json.JSONDecodeError:
@@ -27,13 +25,11 @@ def get_high_scores():
 def update_high_scores(username, score):
     highscores = get_high_scores()
     
-    # Add new entry
     highscores.append({"username": username, "score": score})
     
-    # Sort descending by score and keep top 10
     highscores.sort(key=lambda x: x["score"], reverse=True)
     
-    save_high_scores(highscores)
+    save_high_scores(highscores[:10]) # MODIFIED HERE: Slice to keep only top 10
 
 def get_high_score_value():
     scores = get_high_scores()
