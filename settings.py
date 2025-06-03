@@ -24,6 +24,8 @@ LIGHT_TEXT = (220, 220, 220)    # Off-white for general text (new)
 MEDIUM_TEXT = (180, 180, 180)   # Dimmer text for high scores (new)
 GREY_POWERUP = (150, 150, 150)  # For companion powerup (renamed from NEON_GREY for clarity, same value)
 
+FLAG_BORDER_COLOR = (200, 200, 200) # A light grey border for flags
+
 # Game Colors
 BACKGROUND_COLOR = DEEP_SPACE_BLACK
 
@@ -105,7 +107,7 @@ MENU_SUBTEXT_COLOR = MEDIUM_TEXT # Changed from (200, 200, 200)
 MENU_TITLE_COLOR = NEON_PINK # Changed from NEON_GREEN for consistency with the overall theme title
 
 # Highscore File
-HIGHSCORE_FILE = "highscores.json"
+HIGHSCORE_FILE = "assets/highscores.json"
 
 # Fonts (Comments from original file, these remain as comments)
 # FONT_NAME = "consolas"
@@ -115,3 +117,9 @@ HIGHSCORE_FILE = "highscores.json"
 # FONT_SIZE_MENU_TITLE = 48
 # FONT_SIZE_MENU_BUTTON = 30
 # FONT_SIZE_INPUT = 28
+
+# Locale Settings
+# You can set a default language if needed, e.g., 'en'
+# Make sure this matches one of your locale JSON files (e.g., en.json)
+DEFAULT_LANGUAGE = 'en'
+LOCALE_DIR = 'lang' # Directory where translation files are stored
