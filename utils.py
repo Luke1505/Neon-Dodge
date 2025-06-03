@@ -6,9 +6,11 @@ WIDTH, HEIGHT = 600, 800
 WHITE = (255, 255, 255)
 HIGHSCORE_FILE = "highscores.json"
 
+
 def save_high_scores(highscores):
     with open(HIGHSCORE_FILE, "w") as f:
         json.dump(highscores, f, indent=4)
+
 
 def get_high_scores():
     if not os.path.exists(HIGHSCORE_FILE):
@@ -24,16 +26,18 @@ def get_high_scores():
 
 def update_high_scores(username, score):
     highscores = get_high_scores()
-    
+
     highscores.append({"username": username, "score": score})
-    
+
     highscores.sort(key=lambda x: x["score"], reverse=True)
-    
-    save_high_scores(highscores[:10]) # MODIFIED HERE: Slice to keep only top 10
+
+    save_high_scores(highscores[:10])  # MODIFIED HERE: Slice to keep only top 10
+
 
 def get_high_score_value():
     scores = get_high_scores()
     return scores[0]["score"] if scores else 0
+
 
 def get_username(screen):
     pygame.font.init()
@@ -47,10 +51,15 @@ def get_username(screen):
 
         hint_text = "Enter Username (optional):"
         display_text = font.render(f"{hint_text} {username}", True, WHITE)
-        screen.blit(display_text, (WIDTH // 2 - display_text.get_width() // 2, HEIGHT // 2 - 30))
+        screen.blit(
+            display_text, (WIDTH // 2 - display_text.get_width() // 2, HEIGHT // 2 - 30)
+        )
 
         instruction_text = font.render("Press ENTER to continue", True, WHITE)
-        screen.blit(instruction_text, (WIDTH // 2 - instruction_text.get_width() // 2, HEIGHT // 2 + 30))
+        screen.blit(
+            instruction_text,
+            (WIDTH // 2 - instruction_text.get_width() // 2, HEIGHT // 2 + 30),
+        )
 
         pygame.display.flip()
 

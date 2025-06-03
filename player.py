@@ -1,30 +1,30 @@
 import pygame
-from utils import WIDTH, HEIGHT 
+from utils import WIDTH, HEIGHT
+
 
 # Inherit from pygame.sprite.Sprite
 class Player(pygame.sprite.Sprite):
     def __init__(self):
-        super().__init__() # Call the parent Sprite constructor
+        super().__init__()  # Call the parent Sprite constructor
         self.original_width = 60
         self.original_height = 20
         self.width = self.original_width
         self.height = self.original_height
-        
+
         self.color = (0, 255, 180)
-        
+
         # Create self.image and self.rect
         self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)
-        self.image.fill(self.color) # Simple fill for now, can be more complex
+        self.image.fill(self.color)  # Simple fill for now, can be more complex
         # If you want rounded corners on the image itself:
         # self.image.fill((0,0,0,0)) # Transparent background
         # pygame.draw.rect(self.image, self.color, (0,0,self.width,self.height), border_radius=6)
 
         self.rect = self.image.get_rect()
-        
+
         self.rect.x = 300  # Start at the center
         self.rect.y = 740  # Near the bottom
         self.speed = 8
-
 
     def move(self, keys):
         dx = 0
@@ -37,12 +37,12 @@ class Player(pygame.sprite.Sprite):
             dy = -self.speed
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             dy = self.speed
-        
+
         self.rect.x += dx
         self.rect.y += dy
-        
+
         # Update self.x and self.y if other parts of your code still use them, though rect.x/y is preferred
-        self.x = self.rect.x 
+        self.x = self.rect.x
         self.y = self.rect.y
 
         # Boundary checks using self.rect
@@ -50,16 +50,17 @@ class Player(pygame.sprite.Sprite):
         self.rect.right = min(WIDTH - 2.5, self.rect.right)
         self.rect.top = max(HEIGHT // 2, self.rect.top)
         self.rect.bottom = min(HEIGHT - 5, self.rect.bottom)
-    
+
     def update_visuals(self):
-        """ Recreates self.image if size or color changes. Call after modifying width/height/color. """
+        """Recreates self.image if size or color changes. Call after modifying width/height/color."""
         # This is important if player size changes (e.g., shrink powerup)
         old_center = self.rect.center
         self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)
         # self.image.fill(self.color) # Or draw rounded rect
-        pygame.draw.rect(self.image, self.color, (0,0,self.width,self.height), border_radius=6)
+        pygame.draw.rect(
+            self.image, self.color, (0, 0, self.width, self.height), border_radius=6
+        )
         self.rect = self.image.get_rect(center=old_center)
-
 
     # The draw method is no longer strictly necessary if using group.draw(),
     # but it's good to have a consistent way to draw the player.

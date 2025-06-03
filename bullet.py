@@ -1,5 +1,6 @@
 import pygame
 
+
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, speed_y=-10, color=(255, 255, 0), radius=4):
         super().__init__()
@@ -14,7 +15,9 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y += self.speed_y
         # Remove bullet if it goes off the top of the screen
         if self.rect.bottom < 0:
-            self.kill() # Removes sprite from all groups it's a member of
+            self.kill()  # Removes sprite from all groups it's a member of
 
-    def draw(self, screen): # Technically not needed if using sprite group's draw method
+    def draw(
+        self, screen
+    ):  # Technically not needed if using sprite group's draw method
         screen.blit(self.image, self.rect)

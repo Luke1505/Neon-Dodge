@@ -1,11 +1,27 @@
 [
     {
         "username": "Guest",
+        "score": 385
+    },
+    {
+        "username": "Luke",
+        "score": 123
+    },
+    {
+        "username": "Guest",
         "score": 105
     },
     {
         "username": "Luke",
         "score": 95
+    },
+    {
+        "username": "Luke",
+        "score": 89
+    },
+    {
+        "username": "Luke",
+        "score": 88
     },
     {
         "username": "Test",
@@ -17,26 +33,10 @@
     },
     {
         "username": "Luke",
-        "score": 31
+        "score": 32
     },
     {
         "username": "Luke",
         "score": 31
-    },
-    {
-        "username": "Test",
-        "score": 21
-    },
-    {
-        "username": "a",
-        "score": 19
-    },
-    {
-        "username": "Test",
-        "score": 16
-    },
-    {
-        "username": "Test",
-        "score": 14
     }
 ]
