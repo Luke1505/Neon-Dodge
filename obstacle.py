@@ -1,18 +1,28 @@
 import random
 import pygame
-import settings # Import settings
+import settings  # Import settings
 
 
 class Obstacle(pygame.sprite.Sprite):
-    BASE_WIDTH = 50 # Kept as class attributes for local reference, can be moved to settings
-    BASE_HEIGHT = 20 # Kept as class attributes for local reference, can be moved to settings
-    BASE_COLOR = settings.NEON_RED # Use settings color
+    BASE_WIDTH = (
+        50  # Kept as class attributes for local reference, can be moved to settings
+    )
+    BASE_HEIGHT = (
+        20  # Kept as class attributes for local reference, can be moved to settings
+    )
+    BASE_COLOR = settings.NEON_RED  # Use settings color
 
     def __init__(
-        self, speed, generation=1, can_split=False, num_splits=2, position=None, game_settings=settings # Accept game_settings
+        self,
+        speed,
+        generation=1,
+        can_split=False,
+        num_splits=2,
+        position=None,
+        game_settings=settings,  # Accept game_settings
     ):
         super().__init__()
-        self.settings = game_settings # Store settings
+        self.settings = game_settings  # Store settings
 
         self.speed = speed
         self.generation = generation
@@ -33,7 +43,7 @@ class Obstacle(pygame.sprite.Sprite):
                 self.BASE_COLOR[2],
             )
             self.effective_speed = self.speed * 1.2
-        else: # Fallback, though generation 1 and 0 are the primary types
+        else:  # Fallback, though generation 1 and 0 are the primary types
             self.width = self.BASE_WIDTH
             self.height = self.BASE_HEIGHT
             self.color = self.BASE_COLOR
@@ -70,23 +80,25 @@ class Obstacle(pygame.sprite.Sprite):
         if position:
             self.rect.center = position
         else:
-            self.rect.x = random.randint(0, self.settings.WIDTH - self.width) # Use settings.WIDTH
+            self.rect.x = random.randint(
+                0, self.settings.WIDTH - self.width
+            )  # Use settings.WIDTH
             self.rect.y = -self.height
 
     def update(self, speed_multiplier=1):
         self.rect.y += self.effective_speed * speed_multiplier
-        if self.rect.top > self.settings.HEIGHT: # Use settings.HEIGHT
+        if self.rect.top > self.settings.HEIGHT:  # Use settings.HEIGHT
             self.kill()
 
     def get_split_pieces(self):
-        if (
-            not self.can_split or self.generation <= 0 or self.num_splits != 2
-        ):
+        if not self.can_split or self.generation <= 0 or self.num_splits != 2:
             return []
 
         new_pieces = []
 
-        temp_small_piece = Obstacle(speed=self.speed, generation=0, can_split=False, game_settings=self.settings) # Pass settings
+        temp_small_piece = Obstacle(
+            speed=self.speed, generation=0, can_split=False, game_settings=self.settings
+        )  # Pass settings
         small_piece_width = temp_small_piece.width
         small_piece_height = temp_small_piece.height
 
@@ -97,12 +109,20 @@ class Obstacle(pygame.sprite.Sprite):
         pos2_y = self.rect.centery
 
         piece1 = Obstacle(
-            speed=self.speed, generation=0, can_split=False, position=(pos1_x, pos1_y), game_settings=self.settings # Pass settings
+            speed=self.speed,
+            generation=0,
+            can_split=False,
+            position=(pos1_x, pos1_y),
+            game_settings=self.settings,  # Pass settings
         )
         new_pieces.append(piece1)
 
         piece2 = Obstacle(
-            speed=self.speed, generation=0, can_split=False, position=(pos2_x, pos2_y), game_settings=self.settings # Pass settings
+            speed=self.speed,
+            generation=0,
+            can_split=False,
+            position=(pos2_x, pos2_y),
+            game_settings=self.settings,  # Pass settings
         )
         new_pieces.append(piece2)
 

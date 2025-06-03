@@ -1,6 +1,6 @@
 import pygame
 from bullet import Bullet
-import settings # Import settings
+import settings  # Import settings
 
 
 class Companion(pygame.sprite.Sprite):
@@ -8,13 +8,13 @@ class Companion(pygame.sprite.Sprite):
     COMPANION_OFFSET_Y = 0
     FIRE_RATE_MS = 400
 
-    def __init__(self, player_rect, game_settings=settings): # Accept game_settings
+    def __init__(self, player_rect, game_settings=settings):  # Accept game_settings
         super().__init__()
-        self.settings = game_settings # Store settings
+        self.settings = game_settings  # Store settings
         self.width = 20
         self.height = 20
         self.image = pygame.Surface([self.width, self.height], pygame.SRCALPHA)
-        self.color = self.settings.NEON_BLUE # Use settings color
+        self.color = self.settings.NEON_BLUE  # Use settings color
         pygame.draw.rect(
             self.image, self.color, (0, 0, self.width, self.height), border_radius=5
         )
@@ -40,7 +40,11 @@ class Companion(pygame.sprite.Sprite):
         bullet_start_x = self.rect.centerx
         bullet_start_y = self.rect.top
         new_bullet = Bullet(
-            bullet_start_x, bullet_start_y, speed_y=self.settings.COMPANION_BULLET_SPEED, color=self.settings.COMPANION_BULLET_COLOR, radius=5 # Use settings for speed and color
+            bullet_start_x,
+            bullet_start_y,
+            speed_y=self.settings.COMPANION_BULLET_SPEED,
+            color=self.settings.COMPANION_BULLET_COLOR,
+            radius=5,  # Use settings for speed and color
         )
         return [new_bullet]
 

@@ -1,6 +1,6 @@
 import pygame
 import random
-import settings # Import settings
+import settings  # Import settings
 
 # Define weights for each power-up type
 # Higher number means more common
@@ -13,15 +13,6 @@ POWERUP_WEIGHTS = {
     "extralife": 1,
 }
 
-POWERUP_COLORS = {
-    "shield": settings.NEON_BLUE, # Use settings colors
-    "slowmo": settings.NEON_YELLOW, # Use settings colors
-    "bomb": settings.NEON_RED, # Use settings colors
-    "shrink": settings.NEON_MAGENTA, # Use settings colors
-    "extralife": settings.NEON_GREEN, # Use settings colors
-    "turret": settings.NEON_GREY, # Use settings colors
-}
-
 # Create the selection pool based on weights
 _POWERUP_SELECTION_POOL = []
 for type_name, weight in POWERUP_WEIGHTS.items():
@@ -29,9 +20,9 @@ for type_name, weight in POWERUP_WEIGHTS.items():
 
 
 class PowerUp(pygame.sprite.Sprite):
-    def __init__(self, game_settings=settings): # Accept game_settings
+    def __init__(self, game_settings=settings):  # Accept game_settings
         super().__init__()
-        self.settings = game_settings # Store settings
+        self.settings = game_settings  # Store settings
 
         # Select type from the weighted pool
         if not _POWERUP_SELECTION_POOL:
@@ -40,9 +31,9 @@ class PowerUp(pygame.sprite.Sprite):
         else:
             self.type = random.choice(_POWERUP_SELECTION_POOL)
 
-        self.size = self.settings.POWERUP_SIZE # Use settings for size
-        self.color = POWERUP_COLORS[self.type]
-        self.speed = self.settings.POWERUP_SPEED # Use settings for speed
+        self.size = self.settings.POWERUP_SIZE  # Use settings for size
+        self.color = settings.POWERUP_COLORS[self.type]
+        self.speed = self.settings.POWERUP_SPEED  # Use settings for speed
 
         self.image = pygame.Surface([self.size, self.size], pygame.SRCALPHA)
         pygame.draw.ellipse(self.image, self.color, (0, 0, self.size, self.size))
@@ -59,10 +50,12 @@ class PowerUp(pygame.sprite.Sprite):
         self.image.blit(label_surface, label_rect)
 
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(50, self.settings.WIDTH - self.size - 50) # Use settings.WIDTH
+        self.rect.x = random.randint(
+            50, self.settings.WIDTH - self.size - 50
+        )  # Use settings.WIDTH
         self.rect.y = -self.size
 
     def update(self):
         self.rect.y += self.speed
-        if self.rect.top > self.settings.HEIGHT: # Use settings.HEIGHT
+        if self.rect.top > self.settings.HEIGHT:  # Use settings.HEIGHT
             self.kill()

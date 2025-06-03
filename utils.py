@@ -1,11 +1,11 @@
 import json
 import os
 import pygame
-import settings # Import settings
+import settings  # Import settings
 
-WIDTH, HEIGHT = settings.WIDTH, settings.HEIGHT # Use settings for WIDTH, HEIGHT
-WHITE = settings.WHITE # Use settings for WHITE
-HIGHSCORE_FILE = settings.HIGHSCORE_FILE # Use settings for HIGHSCORE_FILE
+WIDTH, HEIGHT = settings.WIDTH, settings.HEIGHT  # Use settings for WIDTH, HEIGHT
+UI_TEXT_COLOR = settings.MENU_TEXT_COLOR  # Changed from WHITE to UI_TEXT_COLOR from settings
+HIGHSCORE_FILE = settings.HIGHSCORE_FILE  # Use settings for HIGHSCORE_FILE
 
 
 def save_high_scores(highscores):
@@ -48,15 +48,15 @@ def get_username(screen):
     clock = pygame.time.Clock()
 
     while input_active:
-        screen.fill((30, 30, 50))
+        screen.fill(settings.BACKGROUND_COLOR) # Changed to use BACKGROUND_COLOR from settings
 
         hint_text = "Enter Username (optional):"
-        display_text = font.render(f"{hint_text} {username}", True, WHITE)
+        display_text = font.render(f"{hint_text} {username}", True, UI_TEXT_COLOR) # Changed to UI_TEXT_COLOR
         screen.blit(
             display_text, (WIDTH // 2 - display_text.get_width() // 2, HEIGHT // 2 - 30)
         )
 
-        instruction_text = font.render("Press ENTER to continue", True, WHITE)
+        instruction_text = font.render("Press ENTER to continue", True, UI_TEXT_COLOR) # Changed to UI_TEXT_COLOR
         screen.blit(
             instruction_text,
             (WIDTH // 2 - instruction_text.get_width() // 2, HEIGHT // 2 + 30),
