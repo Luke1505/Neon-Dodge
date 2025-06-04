@@ -35,16 +35,16 @@ PLAYER_SPEED = 6 # Adjusted from 8 for slightly less frantic movement
 INITIAL_LIVES = 3
 
 # Obstacles
-OBSTACLE_COLORS = [NEON_MAGENTA, NEON_PURPLE, NEON_GREEN, NEON_ORANGE, NEON_YELLOW] # Array of colors for obstacles
-OBSTACLE_BASE_SPEED = 4.0 # Increased from 4 for starting challenge (since speed_increase is now faster)
-SPLITTABLE_OBSTACLE_CHANCE = 0.25 # (kept)
-BASE_OBSTACLE_SPAWN_INTERVAL = 40 # Decreased from 40 for slightly slower initial spawn for ramp up
-MIN_OBSTACLE_SPAWN_INTERVAL = 25 # (kept)
-SCORE_TO_REACH_MIN_INTERVAL = 500 # Increased from 150 (slower to reach max spawn rate, more gradual difficulty)
-OBSTACLE_SPEED_INCREASE_INTERVAL = 30 # Increased from 15 (speed up less frequently, but by larger amounts)
-OBSTACLE_SPEED_INCREASE_AMOUNT = 0.7 # Decreased from 0.4 (to compensate for less frequent but higher max speed)
-MAX_OBSTACLE_SPEED = 40.0 # Increased from 12 (kept)
-PARTICLES_PER_OBSTACLE_EXPLOSION = 25 # Increased from 15 for more dramatic explosions
+OBSTACLE_COLORS = [NEON_MAGENTA, NEON_PURPLE, NEON_GREEN, NEON_ORANGE, NEON_YELLOW]
+OBSTACLE_BASE_SPEED = 5.0 # Etwas schnellerer Start
+SPLITTABLE_OBSTACLE_CHANCE = 0.25
+BASE_OBSTACLE_SPAWN_INTERVAL = 35 # Schnellerer initialer Spawn
+MIN_OBSTACLE_SPAWN_INTERVAL = 20 # Noch schnellerer maximaler Spawn
+SCORE_TO_REACH_MIN_INTERVAL = 300 # Maximale Spawn-Rate wird früher erreicht
+OBSTACLE_SPEED_INCREASE_INTERVAL = 20 # Häufigere Geschwindigkeitserhöhungen
+OBSTACLE_SPEED_INCREASE_AMOUNT = 1.0 # Stärkere Geschwindigkeitserhöhungen
+MAX_OBSTACLE_SPEED = 50.0 # Höhere mögliche Endgeschwindigkeit
+PARTICLES_PER_OBSTACLE_EXPLOSION = 25
 
 # Bullet Settings
 BULLET_SPEED = -10 # (kept)

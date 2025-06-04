@@ -1,5 +1,9 @@
 [
     {
+        "username": "Luke",
+        "score": 777
+    },
+    {
         "username": "Guest",
         "score": 385
     },
@@ -34,9 +38,5 @@
     {
         "username": "Test",
         "score": 52
-    },
-    {
-        "username": "Guest",
-        "score": 40
     }
 ]
