@@ -8,6 +8,10 @@
         "score": 385
     },
     {
+        "username": "Guest",
+        "score": 352
+    },
+    {
         "username": "Luke",
         "score": 146
     },
@@ -34,9 +38,5 @@
     {
         "username": "Luke",
         "score": 55
-    },
-    {
-        "username": "Test",
-        "score": 52
     }
 ]

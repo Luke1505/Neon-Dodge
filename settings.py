@@ -15,7 +15,7 @@ NEON_CYAN = (0, 255, 255)       # Classic Cyan (kept, will be used as Transparen
 NEON_ORANGE = (255, 180, 0)     # More intense Orange (newly added for obstacles)
 NEON_PURPLE = (190, 110, 255)   # Bright Purple (newly added)
 NEON_PINK = (255, 100, 200)     # Bright Pink (newly added for menu title)
-
+DARK_GREEN = (0, 100, 0)            # Dark Green (kept for companion powerup)
 # Background/UI shades
 DEEP_SPACE_BLACK = (10, 10, 30) # Even darker background (used for BACKGROUND_COLOR)
 ACCENT_DARK_BLUE = (40, 40, 90) # Slightly lighter for elements/buttons (new)
@@ -43,8 +43,16 @@ MIN_OBSTACLE_SPAWN_INTERVAL = 20 # Noch schnellerer maximaler Spawn
 SCORE_TO_REACH_MIN_INTERVAL = 300 # Maximale Spawn-Rate wird früher erreicht
 OBSTACLE_SPEED_INCREASE_INTERVAL = 20 # Häufigere Geschwindigkeitserhöhungen
 OBSTACLE_SPEED_INCREASE_AMOUNT = 1.0 # Stärkere Geschwindigkeitserhöhungen
-MAX_OBSTACLE_SPEED = 50.0 # Höhere mögliche Endgeschwindigkeit
+MAX_OBSTACLE_SPEED = 75.0 # Höhere mögliche Endgeschwindigkeit
 PARTICLES_PER_OBSTACLE_EXPLOSION = 25
+
+MULTIPLE_OBSTACLE_SPAWN_CHANCE = 0.45 # 35% Chance, zusätzliche Hindernisse zu spawnen
+ADDITIONAL_OBSTACLES_TO_SPAWN = 1 # Anzahl der zusätzlichen Hindernisse, die gespawnt werden
+MIN_MULTIPLE_SPAWN_X_GAP = 70 # Mindestabstand zwischen Hindernissen beim Mehrfach-Spawn
+MAX_MULTIPLE_SPAWN_X_GAP = 120 # Höchstabstand zwischen Hindernissen beim Mehrfach-Spawn
+MULTIPLE_SPAWN_Y_OFFSET_MIN = 0 # Minimaler Y-Offset für zusätzliche Hindernisse
+MULTIPLE_SPAWN_Y_OFFSET_MAX = 50 # Maximaler Y-Offset für zusätzliche Hindernisse
+
 
 # Bullet Settings
 BULLET_SPEED = -10 # (kept)
@@ -79,7 +87,7 @@ UI_TIMER_BAR_BG_COLOR = ACCENT_DARK_BLUE # Changed from (50,50,50)
 UI_SLOWMO_TIMER_COLOR = NEON_YELLOW # (kept)
 UI_SHRINK_TIMER_COLOR = NEON_MAGENTA # (kept)
 UI_PICKUP_MESSAGE_COLOR = NEON_YELLOW # Changed from (255, 255, 100) for more vibrancy
-
+UI_TURRET_TIMER_COLOR = DARK_GREEN
 # Starfield Settings
 NUM_STARS = 200 # Increased from 100 for a denser field
 STAR_SPEED_MIN = 1 # (kept)

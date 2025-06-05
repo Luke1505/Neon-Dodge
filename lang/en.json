@@ -10,7 +10,7 @@
   "score": "Score: {0}",
   "lives": "Lives: {0}",
   "high_score": "High Score: {0}",
-  "turret_active": "Turret: {0:.1f}s",
+  "turret": "Turret",
   "slowmo": "SlowMo",
   "shrink": "Shrink",
   "shield_activated": "Shield Activated!",
