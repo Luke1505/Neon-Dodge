@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom neon color variables */
+:root {
+  --neon-green: #50ff28;
+  --neon-blue: #00dcff;
+  --neon-yellow: #ffff50;
+  --neon-red: #ff0000;
+  --neon-magenta: #ff32ff;
+  --neon-cyan: #00ffff;
+  --neon-orange: #ffb400;
+  --neon-purple: #be6eff;
+  --neon-pink: #ff64c8;
+  --deep-space-black: #0a0a1e;
+  --accent-dark-blue: #28285a;
+  --bright-white: #ffffff;
+  --light-text: #dcdcdc;
+  --medium-text: #b4b4b4;
+}
+
+/* Custom CSS for neon effects */
+.neon-glow {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+}
+
+.neon-border {
+  box-shadow: 0 0 10px currentColor, inset 0 0 10px currentColor;
+}
+
+.game-canvas {
+  background: radial-gradient(circle at center, #1a1a3e 0%, var(--deep-space-black) 100%);
+}
+
+/* Keyframes for animations */
+@keyframes pulse-neon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.pulse-neon {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .game-container {
+    padding: 0.5rem;
+  }
+}
+
+/* Button styles */
+.neon-button {
+  background: var(--accent-dark-blue);
+  border: 2px solid var(--neon-blue);
+  color: var(--bright-white);
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+  background: rgba(0, 220, 255, 0.2);
+  box-shadow: 0 0 20px var(--neon-blue);
+  transform: scale(1.05);
+}

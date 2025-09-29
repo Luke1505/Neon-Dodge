@@ -1,0 +1,36 @@
+{
+  "name": "neon-dodge",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [
+    "game",
+    "neon",
+    "dodge",
+    "react",
+    "nextjs"
+  ],
+  "author": "Luke1505",
+  "license": "MIT",
+  "description": "A neon-themed dodge game built with React and Next.js",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.15",
+    "@types/react-dom": "^19.1.9",
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13"
+  }
+}
