@@ -1,0 +1,257 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Google Fonts for a professional look */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+/* Custom neon color variables */
+:root {
+  --neon-green: #50ff28;
+  --neon-blue: #00dcff;
+  --neon-yellow: #ffff50;
+  --neon-red: #ff3366;
+  --neon-magenta: #ff32ff;
+  --neon-cyan: #00ffff;
+  --neon-orange: #ffb400;
+  --neon-purple: #be6eff;
+  --neon-pink: #ff64c8;
+  --deep-space-black: #0a0a1e;
+  --accent-dark-blue: #28285a;
+  --bright-white: #ffffff;
+  --light-text: #dcdcdc;
+  --medium-text: #b4b4b4;
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: linear-gradient(135deg, #0a0a1e 0%, #1a1a3e 50%, #28285a 100%);
+  color: var(--light-text);
+  overflow: hidden;
+}
+
+/* Custom CSS for professional neon effects */
+.neon-glow {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px currentColor,
+    0 0 35px currentColor,
+    0 0 40px currentColor;
+  filter: drop-shadow(0 0 10px currentColor);
+}
+
+.neon-border {
+  box-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    inset 0 0 5px currentColor,
+    inset 0 0 10px currentColor;
+  border: 2px solid currentColor;
+}
+
+.game-canvas {
+  background: radial-gradient(circle at center, #1a1a3e 0%, var(--deep-space-black) 100%);
+  box-shadow: 
+    0 0 20px var(--neon-blue),
+    inset 0 0 20px rgba(0, 220, 255, 0.1);
+}
+
+/* Professional title font */
+.game-title {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+/* Enhanced keyframes for smooth animations */
+@keyframes pulse-neon {
+  0%, 100% { 
+    opacity: 1; 
+    text-shadow: 
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 15px currentColor,
+      0 0 20px currentColor;
+  }
+  50% { 
+    opacity: 0.85; 
+    text-shadow: 
+      0 0 2px currentColor,
+      0 0 5px currentColor,
+      0 0 8px currentColor,
+      0 0 12px currentColor;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-10px) scale(1.02); }
+}
+
+@keyframes slide-in {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px currentColor; 
+  }
+  50% { 
+    box-shadow: 0 0 30px currentColor, 0 0 40px currentColor; 
+  }
+}
+
+.pulse-neon {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.slide-in {
+  animation: slide-in 0.6s ease-out;
+}
+
+.glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Professional button styles */
+.neon-button {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--accent-dark-blue) 0%, rgba(40, 40, 90, 0.8) 100%);
+  border: 2px solid var(--neon-blue);
+  color: var(--bright-white);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.neon-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.neon-button:hover::before {
+  left: 100%;
+}
+
+.neon-button:hover {
+  background: linear-gradient(135deg, rgba(0, 220, 255, 0.2) 0%, rgba(40, 40, 90, 0.9) 100%);
+  box-shadow: 
+    0 0 20px var(--neon-blue),
+    0 0 40px var(--neon-blue),
+    inset 0 0 20px rgba(0, 220, 255, 0.1);
+  transform: scale(1.05) translateY(-2px);
+  border-color: var(--neon-cyan);
+}
+
+.neon-button:active {
+  transform: scale(0.98) translateY(1px);
+}
+
+/* Loading animation */
+@keyframes loading-spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  animation: loading-spin 1s linear infinite;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .game-container {
+    padding: 0.5rem;
+    margin: 0.5rem;
+  }
+  
+  .game-title {
+    font-size: 2.5rem !important;
+    letter-spacing: 2px;
+  }
+  
+  .neon-button {
+    font-size: 0.875rem;
+    padding: 0.75rem 1.5rem;
+    letter-spacing: 1px;
+  }
+}
+
+/* Enhanced input styling */
+.neon-input {
+  background: linear-gradient(135deg, var(--accent-dark-blue) 0%, rgba(40, 40, 90, 0.6) 100%);
+  border: 2px solid var(--neon-blue);
+  color: var(--bright-white);
+  transition: all 0.3s ease;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 500;
+}
+
+.neon-input:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: 
+    0 0 10px var(--neon-cyan),
+    inset 0 0 10px rgba(0, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(40, 40, 90, 0.8) 100%);
+}
+
+/* Achievement badge styles */
+.achievement-badge {
+  background: linear-gradient(135deg, var(--neon-yellow) 0%, var(--neon-orange) 100%);
+  color: var(--deep-space-black);
+  font-weight: 700;
+  text-shadow: none;
+  box-shadow: 0 0 15px var(--neon-yellow);
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--deep-space-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neon-blue);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-cyan);
+}
