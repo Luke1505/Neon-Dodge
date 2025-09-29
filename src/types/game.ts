@@ -33,6 +33,7 @@ export interface Obstacle extends GameObject {
   generation: number;
   canSplit: boolean;
   numSplits: number;
+  passedPlayer?: boolean;
 }
 
 export interface PowerUp extends GameObject {

@@ -8,6 +8,8 @@ import MainMenu from './MainMenu';
 import GameHUD from './GameHUD';
 import PauseMenu from './PauseMenu';
 import GameOverScreen from './GameOverScreen';
+import InstructionsScreen from './InstructionsScreen';
+import HighScoresScreen from './HighScoresScreen';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameLoop } from '@/hooks/useGameLoop';
 import { useHighScores } from '@/hooks/useHighScores';
@@ -21,7 +23,7 @@ const Game: React.FC = () => {
   });
 
   const { gameState, initializeGame, resetGame, updatePlayer, togglePause } = useGameState();
-  const { highScores, addHighScore } = useHighScores();
+  const { highScores, addHighScore, clearHighScores } = useHighScores();
   
   // Game loop
   useGameLoop(gameState, canvasRef);
@@ -110,6 +112,24 @@ const Game: React.FC = () => {
             onShowHighScores={() => setMenuState(prev => ({ ...prev, currentScreen: 'highScores' }))}
             username={menuState.username}
             highScores={highScores}
+          />
+        );
+
+      case 'instructions':
+        return (
+          <InstructionsScreen
+            onBack={() => setMenuState(prev => ({ ...prev, currentScreen: 'menu' }))}
+          />
+        );
+
+      case 'highScores':
+        return (
+          <HighScoresScreen
+            highScores={highScores}
+            onBack={() => setMenuState(prev => ({ ...prev, currentScreen: 'menu' }))}
+            onClearScores={() => {
+              clearHighScores();
+            }}
           />
         );
 
