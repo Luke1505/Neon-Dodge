@@ -2,7 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { HighScore } from '@/types/game';
-import { HIGH_SCORE_CONFIG } from '@/lib/constants';
+
+const HIGH_SCORE_CONFIG = {
+  STORAGE_KEY: 'neon-dodge-high-scores',
+  MAX_ENTRIES: 10,
+};
 
 export const useHighScores = () => {
   const [highScores, setHighScores] = useState<HighScore[]>([]);

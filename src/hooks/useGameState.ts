@@ -1,36 +1,22 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { GameState, Player, ActiveEffects, GameTimers } from '@/types/game';
-import { PLAYER_CONFIG, GAME_SETTINGS, COLORS } from '@/lib/constants';
+import { GameState, Player, ActiveEffects } from '@/types/game';
+import { GAME_SETTINGS, COLORS, PLAYER_SETTINGS } from '@/lib/constants';
 
 const createInitialPlayer = (): Player => ({
-  x: GAME_SETTINGS.WIDTH / 2 - PLAYER_CONFIG.WIDTH / 2,
-  y: GAME_SETTINGS.HEIGHT - 60,
-  width: PLAYER_CONFIG.WIDTH,
-  height: PLAYER_CONFIG.HEIGHT,
-  color: PLAYER_CONFIG.COLOR,
-  lives: PLAYER_CONFIG.INITIAL_LIVES,
-  invincible: false,
-  invincibleEndTime: 0,
-  shrunk: false,
-  shrinkEndTime: 0,
+  x: GAME_SETTINGS.WIDTH / 2,
+  y: GAME_SETTINGS.HEIGHT / 2,
+  size: PLAYER_SETTINGS.SIZE,
+  color: PLAYER_SETTINGS.COLOR,
+  trail: [],
 });
 
 const createInitialEffects = (): ActiveEffects => ({
   shield: false,
-  bombReady: false,
-  pickupMessage: '',
   slowmo: false,
-  slowmoEndTime: 0,
-  turretActive: false,
-  turretEndTime: 0,
-});
-
-const createInitialTimers = (): GameTimers => ({
-  spawnObstacle: 0,
-  spawnPowerup: 0,
-  pickupMessageEndTime: 0,
+  shrink: false,
+  turret: false,
 });
 
 const createInitialGameState = (): GameState => ({
@@ -38,16 +24,17 @@ const createInitialGameState = (): GameState => ({
   gamePaused: false,
   gameOver: false,
   score: 0,
+  lives: GAME_SETTINGS.INITIAL_LIVES,
+  timeElapsed: 0,
   player: createInitialPlayer(),
   obstacles: [],
-  powerups: [],
+  powerUps: [],
   bullets: [],
   particles: [],
   activeEffects: createInitialEffects(),
-  timers: createInitialTimers(),
   combo: 0,
   maxCombo: 0,
-  lastObstacleTime: 0,
+  powerUpsCollected: 0,
 });
 
 export const useGameState = () => {
@@ -87,7 +74,6 @@ export const useGameState = () => {
         ...prev,
         combo: newCombo,
         maxCombo: Math.max(prev.maxCombo, newCombo),
-        lastObstacleTime: Date.now(),
       };
     });
   }, []);
@@ -115,127 +101,6 @@ export const useGameState = () => {
     }));
   }, []);
 
-  const loseLife = useCallback(() => {
-    setGameState(prev => {
-      const newLives = prev.player.lives - 1;
-      if (newLives <= 0) {
-        return {
-          ...prev,
-          player: { ...prev.player, lives: 0 },
-          gameRunning: false,
-          gameOver: true,
-        };
-      }
-      return {
-        ...prev,
-        player: {
-          ...prev.player,
-          lives: newLives,
-          invincible: true,
-          invincibleEndTime: Date.now() + PLAYER_CONFIG.INVINCIBILITY_DURATION,
-        },
-        combo: 0, // Reset combo on death
-      };
-    });
-  }, []);
-
-  const activateShield = useCallback(() => {
-    setGameState(prev => ({
-      ...prev,
-      activeEffects: {
-        ...prev.activeEffects,
-        shield: true,
-      },
-    }));
-  }, []);
-
-  const deactivateShield = useCallback(() => {
-    setGameState(prev => ({
-      ...prev,
-      activeEffects: {
-        ...prev.activeEffects,
-        shield: false,
-      },
-    }));
-  }, []);
-
-  const activateSlowmo = useCallback((duration: number) => {
-    setGameState(prev => ({
-      ...prev,
-      activeEffects: {
-        ...prev.activeEffects,
-        slowmo: true,
-        slowmoEndTime: Date.now() + duration,
-      },
-    }));
-  }, []);
-
-  const activateTurret = useCallback((duration: number) => {
-    setGameState(prev => ({
-      ...prev,
-      activeEffects: {
-        ...prev.activeEffects,
-        turretActive: true,
-        turretEndTime: Date.now() + duration,
-      },
-    }));
-  }, []);
-
-  const shrinkPlayer = useCallback((duration: number) => {
-    setGameState(prev => ({
-      ...prev,
-      player: {
-        ...prev.player,
-        shrunk: true,
-        shrinkEndTime: Date.now() + duration,
-        width: PLAYER_CONFIG.WIDTH * 0.6,
-        height: PLAYER_CONFIG.HEIGHT * 0.6,
-      },
-    }));
-  }, []);
-
-  const addBullet = useCallback((bullet: any) => {
-    setGameState(prev => ({
-      ...prev,
-      bullets: [...prev.bullets, bullet],
-    }));
-  }, []);
-
-  const addParticles = useCallback((particles: any[]) => {
-    setGameState(prev => ({
-      ...prev,
-      particles: [...prev.particles, ...particles],
-    }));
-  }, []);
-
-  const addObstacle = useCallback((obstacle: any) => {
-    setGameState(prev => ({
-      ...prev,
-      obstacles: [...prev.obstacles, obstacle],
-    }));
-  }, []);
-
-  const addPowerup = useCallback((powerup: any) => {
-    setGameState(prev => ({
-      ...prev,
-      powerups: [...prev.powerups, powerup],
-    }));
-  }, []);
-
-  const setPickupMessage = useCallback((message: string, duration: number) => {
-    setGameState(prev => ({
-      ...prev,
-      activeEffects: {
-        ...prev.activeEffects,
-        pickupMessage: message,
-      },
-      timers: {
-        ...prev.timers,
-        pickupMessageEndTime: Date.now() + duration,
-      },
-    }));
-  }, []);
-
   return {
     gameState,
     initializeGame,
@@ -247,16 +112,5 @@ export const useGameState = () => {
     resetCombo,
     togglePause,
     setGameOver,
-    loseLife,
-    activateShield,
-    deactivateShield,
-    activateSlowmo,
-    activateTurret,
-    shrinkPlayer,
-    addBullet,
-    addParticles,
-    addObstacle,
-    addPowerup,
-    setPickupMessage,
   };
 };

@@ -5,7 +5,7 @@ import { GameState } from '@/types/game';
 import { gameEngine } from '@/lib/gameEngine';
 
 export const useGameLoop = (gameState: GameState, canvasRef: React.RefObject<HTMLCanvasElement | null>) => {
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | undefined>(undefined);
   const lastTimeRef = useRef<number>(0);
 
   const gameLoop = useCallback((currentTime: number) => {

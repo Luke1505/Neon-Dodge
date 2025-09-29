@@ -1,74 +1,58 @@
-export interface GameSettings {
-  WIDTH: number;
-  HEIGHT: number;
-  PLAYER_SPEED: number;
-  OBSTACLE_BASE_SPEED: number;
-  POWERUP_SPAWN_INTERVAL: number;
-}
-
 export interface Position {
   x: number;
   y: number;
 }
 
-export interface Size {
-  width: number;
-  height: number;
+export interface TrailPoint extends Position {
+  alpha: number;
 }
 
-export interface GameObject extends Position, Size {
+export interface Player extends Position {
+  size: number;
   color: string;
-  speed?: number;
+  trail?: TrailPoint[];
 }
 
-export interface Player extends GameObject {
-  lives: number;
-  invincible: boolean;
-  invincibleEndTime: number;
-  shrunk: boolean;
-  shrinkEndTime: number;
+export interface Obstacle extends Position {
+  size: number;
+  speed: number;
+  color: string;
+  health: number;
 }
 
-export interface Obstacle extends GameObject {
-  generation: number;
-  canSplit: boolean;
-  numSplits: number;
-  passedPlayer?: boolean;
-}
-
-export interface PowerUp extends GameObject {
+export interface PowerUp extends Position {
+  size: number;
   type: PowerUpType;
+  color: string;
+  pulsePhase: number;
 }
 
-export type PowerUpType = 'shield' | 'slowmo' | 'bomb' | 'shrink' | 'extralife' | 'turret';
+export type PowerUpType = 'shield' | 'slowmo' | 'bomb' | 'shrink' | 'extraLife' | 'turret';
 
 export interface Particle extends Position {
-  velocityX: number;
-  velocityY: number;
-  life: number;
-  maxLife: number;
-  color: string;
+  vx: number;
+  vy: number;
   size: number;
+  color: string;
+  alpha: number;
+  life: number;
 }
 
-export interface Bullet extends GameObject {
-  isCompanion?: boolean;
+export interface Bullet extends Position {
+  speed: number;
+  size: number;
+  color: string;
 }
 
 export interface ActiveEffects {
   shield: boolean;
-  bombReady: boolean;
-  pickupMessage: string;
   slowmo: boolean;
-  slowmoEndTime: number;
-  turretActive: boolean;
-  turretEndTime: number;
-}
-
-export interface GameTimers {
-  spawnObstacle: number;
-  spawnPowerup: number;
-  pickupMessageEndTime: number;
+  shrink: boolean;
+  turret: boolean;
+  shieldEndTime?: number;
+  slowmoEndTime?: number;
+  shrinkEndTime?: number;
+  turretEndTime?: number;
 }
 
 export interface GameState {
@@ -76,16 +60,18 @@ export interface GameState {
   gamePaused: boolean;
   gameOver: boolean;
   score: number;
+  lives: number;
+  timeElapsed: number;
   player: Player;
   obstacles: Obstacle[];
-  powerups: PowerUp[];
+  powerUps: PowerUp[];
   bullets: Bullet[];
   particles: Particle[];
   activeEffects: ActiveEffects;
-  timers: GameTimers;
   combo: number;
   maxCombo: number;
-  lastObstacleTime: number;
+  lastBulletTime?: number;
+  powerUpsCollected: number;
 }
 
 export interface HighScore {
